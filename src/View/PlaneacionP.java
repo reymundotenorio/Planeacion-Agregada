@@ -193,7 +193,7 @@ public class PlaneacionP extends javax.swing.JFrame {
         btnsave.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnsave.setForeground(new java.awt.Color(255, 255, 255));
         btnsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Generar.png"))); // NOI18N
-        btnsave.setMnemonic('g');
+        btnsave.setMnemonic('c');
         btnsave.setText("Calcular");
         btnsave.setToolTipText("Guardar Registro");
         btnsave.setContentAreaFilled(false);
@@ -1311,9 +1311,17 @@ public class PlaneacionP extends javax.swing.JFrame {
     ArrayList<DemandaPOJO> DemandaList;
     ArrayList<Float> ProdRequeridaList;
 
+    ArrayList<Float> HorasDisponMList;
+    ArrayList<Float> HorasDisponNList;
+
+    ArrayList<Float> HorasProdReqList;
+
     public void CalcularProduccionRequerida() {
 
         DemandaList = new ArrayList<>();
+        HorasDisponMList = new ArrayList<>();
+        HorasDisponNList = new ArrayList<>();
+        HorasProdReqList = new ArrayList<>();
 
         for (int i = 0; i < TablaDemanda.getRowCount(); i++) {
             String Nombre = ((String) this.TablaDemanda.getModel().getValueAt(i, 1));
@@ -1329,12 +1337,12 @@ public class PlaneacionP extends javax.swing.JFrame {
         String StockS = txtStockSeguridad.getText().trim();
         String UnidsI = txtInvIni.getText().trim();
         String HrsUnid = txtHorasUnid.getText().trim();
-               String TrabIni = txtIniTrab.getText().trim();
+        String TrabIni = txtIniTrab.getText().trim();
 
         float SS = Float.valueOf(StockS);
         float InvIni = Float.parseFloat(UnidsI);
         float HorasUnid = Float.parseFloat(HrsUnid);
-               float TrabIniciales = Float.parseFloat(TrabIni);
+        float TrabIniciales = Float.parseFloat(TrabIni);
 
         SS = SS / 100;
 
@@ -1370,6 +1378,8 @@ public class PlaneacionP extends javax.swing.JFrame {
             //Cálculo de Horas Requeridas
             float HrsProdReq = ProdRequerida * HorasUnid;
 
+            HorasProdReqList.add(HrsProdReq);
+
             modelPersecucion.setValueAt(HrsProdReq, 1, Columna);
             modelFuerzaN.setValueAt(HrsProdReq, 1, Columna);
             modelOutsourcing.setValueAt(HrsProdReq, 1, Columna);
@@ -1377,12 +1387,16 @@ public class PlaneacionP extends javax.swing.JFrame {
             //Cálculo de Horas Disponibles
             float HrsDisponM = DiasLaborables * 8;
 
+            HorasDisponMList.add(HrsDisponM);
+
             modelPersecucion.setValueAt(HrsDisponM, 2, Columna);
             modelFuerzaN.setValueAt(HrsDisponM, 2, Columna);
             modelOutsourcing.setValueAt(HrsDisponM, 2, Columna);
-            
-             //Cálculo de Horas Disponibles (N)
+
+            //Cálculo de Horas Disponibles (N)
             float HrsDisponN = HrsDisponM * TrabIniciales;
+
+            HorasDisponNList.add(HrsDisponN);
 
             modelFuerzaN.setValueAt(HrsDisponN, 3, Columna);
             modelOutsourcing.setValueAt(HrsDisponN, 3, Columna);
@@ -1392,6 +1406,73 @@ public class PlaneacionP extends javax.swing.JFrame {
         TablaPersecusion.setModel(modelPersecucion);
         TablaFuerzaNivelada.setModel(modelFuerzaN);
         TablaOutsourcing.setModel(modelOutsourcing);
+
+        CalcularPersecucion();
+
+    }
+
+    public void CalcularPersecucion() {
+        String TrabIni = txtIniTrab.getText().trim();
+
+        String CtoXContra = txtCtoContra.getText().trim();
+        String CtoXDesp = txtCtoDesp.getText().trim();
+        String CtoXHrsN = txtCtoHrsN.getText().trim();
+
+        float TrabInicial = Float.parseFloat(TrabIni);
+
+        float CtoXContratar = Float.parseFloat(CtoXContra);
+        float CtoXDespedir = Float.parseFloat(CtoXDesp);
+        float CtoXHrsNormal = Float.parseFloat(CtoXHrsN);
+
+        for (int k = 0; k < ProdRequeridaList.size(); k++) {
+            int Columna = k + 1;
+
+            //Cálculo de cantidad trabajadores requeridos
+            float HorasDispon = HorasDisponMList.get(k);
+            float HorasReq = HorasProdReqList.get(k);
+            float TrabReq = HorasReq / HorasDispon;
+
+            TrabReq = (float) Math.ceil(TrabReq);
+            modelPersecucion.setValueAt(TrabReq, 3, Columna);
+
+            float TrabContratar = 0;
+            float TrabDespedir = 0;
+
+            //Cálculo de cantidad trabajadores contratados y despedidos
+            if (TrabInicial >= TrabReq) { // Despedir
+
+                TrabContratar = 0;
+                TrabDespedir = TrabInicial - TrabReq;
+
+            } else if (TrabInicial <= TrabReq) { //Contratar
+
+                TrabDespedir = 0;
+                TrabContratar = TrabReq - TrabInicial;
+
+            }
+
+            TrabInicial = TrabReq;
+
+            modelPersecucion.setValueAt(TrabContratar, 4, Columna);
+            modelPersecucion.setValueAt(TrabDespedir, 5, Columna);
+
+            //Cálculo de Costos de contratar, despedir y horas normales
+            float HrsProdReq = HorasProdReqList.get(k);
+
+            float CtoContratar = TrabContratar * CtoXContratar;
+            float CtoDespedir = TrabDespedir * CtoXDespedir;
+            float CtoHrsNormal = HrsProdReq * CtoXHrsNormal;
+
+            modelPersecucion.setValueAt(CtoContratar, 6, Columna);
+            modelPersecucion.setValueAt(CtoDespedir, 7, Columna);
+            modelPersecucion.setValueAt(CtoHrsNormal, 8, Columna);
+
+            float Total = CtoContratar + CtoDespedir + CtoHrsNormal;
+
+            modelPersecucion.setValueAt(Total, 9, Columna);
+        }
+
+        TablaPersecusion.setModel(modelPersecucion);
 
     }
 
@@ -1432,13 +1513,13 @@ public class PlaneacionP extends javax.swing.JFrame {
         TablaOutsourcing.setDefaultRenderer(Object.class, new FormatoTabla());
 
         TableColumnModel columnModelP = TablaPersecusion.getColumnModel();
-        columnModelP.getColumn(0).setPreferredWidth(120); //Datos
+        columnModelP.getColumn(0).setPreferredWidth(240); //Datos
 
         TableColumnModel columnModelF = TablaFuerzaNivelada.getColumnModel();
-        columnModelF.getColumn(0).setPreferredWidth(100); //Datos
+        columnModelF.getColumn(0).setPreferredWidth(200); //Datos
 
         TableColumnModel columnModelO = TablaOutsourcing.getColumnModel();
-        columnModelO.getColumn(0).setPreferredWidth(90); //Datos
+        columnModelO.getColumn(0).setPreferredWidth(200); //Datos
 
         modelPersecucion.setRowCount(10);
         modelPersecucion.setValueAt("Producción requerida", 0, 0);
