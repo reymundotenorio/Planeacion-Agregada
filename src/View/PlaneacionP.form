@@ -113,10 +113,10 @@
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/Iconos/Guardar.png"/>
+                      <Image iconType="3" name="/Iconos/Generar.png"/>
                     </Property>
                     <Property name="mnemonic" type="int" value="103"/>
-                    <Property name="text" type="java.lang.String" value="Guardar"/>
+                    <Property name="text" type="java.lang.String" value="Calcular"/>
                     <Property name="toolTipText" type="java.lang.String" value="Guardar Registro"/>
                     <Property name="contentAreaFilled" type="boolean" value="false"/>
                     <Property name="enabled" type="boolean" value="false"/>
@@ -257,7 +257,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="1" green="1" red="1" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="N&#xfa;mero inicial de trabajadores"/>
+                        <Property name="text" type="java.lang.String" value="Cantidad inicial de trabajadores"/>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -916,7 +916,7 @@
         </Container>
         <Container class="javax.swing.JPanel" name="PanelFuerzaNivelada">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="PanelPersecusion = PanelEffect2;"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="PanelFuerzaNivelada = PanelEffect3;"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -1018,7 +1018,7 @@
         </Container>
         <Container class="javax.swing.JPanel" name="PanelOutsourcing">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="PanelPersecusion = PanelEffect2;"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="PanelOutsourcing = PanelEffect4;"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">

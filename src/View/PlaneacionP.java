@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controlador.DemandaPOJO;
 import Controlador.ObtenerIcono;
 import static Controlador.ValidarCadena.ValidarCadena;
 import static Controlador.ValidarCadena.ValidarEntero;
@@ -16,6 +17,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -44,8 +46,17 @@ public class PlaneacionP extends javax.swing.JFrame {
         }
 
         initComponents();
-        TablaDemanda.setFont(new java.awt.Font("Tahoma", 0, 14));
+        TablaDemanda.setFont(new java.awt.Font("Tahoma", Font.BOLD, 14));
         TablaDemanda.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        TablaPersecusion.setFont(new java.awt.Font("Tahoma", Font.BOLD, 14));
+        TablaPersecusion.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        TablaFuerzaNivelada.setFont(new java.awt.Font("Tahoma", Font.BOLD, 14));
+        TablaFuerzaNivelada.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        TablaOutsourcing.setFont(new java.awt.Font("Tahoma", Font.BOLD, 14));
+        TablaOutsourcing.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         txtCtoContra.setTransferHandler(null);
         txtCtoDesp.setTransferHandler(null);
@@ -181,9 +192,9 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         btnsave.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnsave.setForeground(new java.awt.Color(255, 255, 255));
-        btnsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Guardar.png"))); // NOI18N
+        btnsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Generar.png"))); // NOI18N
         btnsave.setMnemonic('g');
-        btnsave.setText("Guardar");
+        btnsave.setText("Calcular");
         btnsave.setToolTipText("Guardar Registro");
         btnsave.setContentAreaFilled(false);
         btnsave.setEnabled(false);
@@ -278,7 +289,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(1, 1, 1));
-        jLabel8.setText("Número inicial de trabajadores");
+        jLabel8.setText("Cantidad inicial de trabajadores");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
@@ -839,7 +850,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         TabbedPane.addTab("Persecusión", PanelPersecusion);
 
-        PanelPersecusion = PanelEffect2;
+        PanelFuerzaNivelada = PanelEffect3;
         PanelFuerzaNivelada.setLayout(new javax.swing.BoxLayout(PanelFuerzaNivelada, javax.swing.BoxLayout.LINE_AXIS));
 
         PanelPrimario3.setBackground(new java.awt.Color(255, 193, 7));
@@ -900,7 +911,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         TabbedPane.addTab("Fuerza nivelada y horas extras", PanelFuerzaNivelada);
 
-        PanelPersecusion = PanelEffect2;
+        PanelOutsourcing = PanelEffect4;
         PanelOutsourcing.setLayout(new javax.swing.BoxLayout(PanelOutsourcing, javax.swing.BoxLayout.LINE_AXIS));
 
         PanelPrimario4.setBackground(new java.awt.Color(255, 193, 7));
@@ -1036,14 +1047,14 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         Object[] Titulo = {"No.", "Nombre del periodo", "Demanda pronósticada", "Días laborables"};
 
-        model.setColumnIdentifiers(Titulo);
+        modelDemanda.setColumnIdentifiers(Titulo);
 
-        this.TablaDemanda.setModel(model);
+        this.TablaDemanda.setModel(modelDemanda);
 
         JTableHeader header = TablaDemanda.getTableHeader();
         header.setFont(new Font("Tahoma", Font.BOLD, 14));
 
-//        TablaDemanda.setDefaultRenderer(Object.class, new FormatoTabla());
+//      TablaDemanda.setDefaultRenderer(Object.class, new FormatoTabla());
         TableColumnModel columnModel = TablaDemanda.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(10); //ID
 
@@ -1124,15 +1135,33 @@ public class PlaneacionP extends javax.swing.JFrame {
     private void TabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_TabbedPaneStateChanged
 
         int index = TabbedPane.getSelectedIndex();
-        if (index == 0) {
+        switch (index) {
 
-            PanelEffect.setEffect(new EntryBoucing(1000));
-            PanelEffect.startEffect();
-        }
-        if (index == 1) {
+            case 0:
+                PanelEffect.setEffect(new EntryBoucing(1000));
+                PanelEffect.startEffect();
+                break;
 
-            PanelEffect2.setEffect(new Shape(1000));
-            PanelEffect2.startEffect();
+            case 1:
+
+                PanelEffect2.setEffect(new Shape(1000));
+                PanelEffect2.startEffect();
+                break;
+
+            case 2:
+
+                PanelEffect3.setEffect(new Shape(1000));
+                PanelEffect3.startEffect();
+                break;
+
+            case 3:
+
+                PanelEffect4.setEffect(new Shape(1000));
+                PanelEffect4.startEffect();
+                break;
+
+            default:
+                break;
         }
 
         // TODO add your handling code here:
@@ -1140,6 +1169,8 @@ public class PlaneacionP extends javax.swing.JFrame {
 
     KEffectPanel PanelEffect = new KEffectPanel();
     KEffectPanel PanelEffect2 = new KEffectPanel();
+    KEffectPanel PanelEffect3 = new KEffectPanel();
+    KEffectPanel PanelEffect4 = new KEffectPanel();
 
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -1202,7 +1233,7 @@ public class PlaneacionP extends javax.swing.JFrame {
             return;
         }
         if ("".equals(IniTrab)) {
-            JOptionPane.showMessageDialog(this, "Ingrese el número inicial de trabajadores", "Ingrese", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingrese el cantidad inicial de trabajadores", "Ingrese", JOptionPane.ERROR_MESSAGE);
             txtIniTrab.requestFocus();
             return;
         }
@@ -1259,7 +1290,7 @@ public class PlaneacionP extends javax.swing.JFrame {
         float HorasUnid, HorasNormales, HorasExtras, CostoUnidad, CtoContratar, CtoDespedir, CtoOutsourcing,
                 StockSeguridad, CtoMantenimiento;
         int InicialTrabajadores, InventarioInicial;
-        
+
         HorasUnid = Float.parseFloat(HrsUnid);
         HorasNormales = Float.parseFloat(HorasN);
         HorasExtras = Float.parseFloat(HorasE);
@@ -1269,14 +1300,125 @@ public class PlaneacionP extends javax.swing.JFrame {
         CtoOutsourcing = Float.parseFloat(OutS);
         StockSeguridad = Float.parseFloat(SS);
         CtoMantenimiento = Float.parseFloat(Mant);
-        
+
         InicialTrabajadores = Integer.parseInt(IniTrab);
         InventarioInicial = Integer.parseInt(InvI);
 
+        CalcularProduccionRequerida();
+
     }
+
+    ArrayList<DemandaPOJO> DemandaList;
+
+    public void CalcularProduccionRequerida() {
+        DemandaList = new ArrayList<>();
+
+        for (int i = 0; i < TablaDemanda.getRowCount(); i++) {
+            String Nombre = ((String) this.TablaDemanda.getModel().getValueAt(i, 1));
+            float DemandaP = Float.parseFloat(this.TablaDemanda.getModel().getValueAt(i, 2).toString());
+            int DiasLab = Integer.parseInt(this.TablaDemanda.getModel().getValueAt(i, 3).toString());
+
+            DemandaList.add(new DemandaPOJO(Nombre, DemandaP, DiasLab));
+        }
+
+        TituloEstrategias();
+
+    }
+
+    public void TituloEstrategias() {
+
+        int CantidadElementos = DemandaList.size();
+        CantidadElementos++;
+
+        Object[] Titulo = new Object[CantidadElementos];
+
+        Titulo[0] = "";
+
+        int i = 0;
+        for (DemandaPOJO DemandaLista : DemandaList) {
+            i++;
+            Titulo[i] = DemandaLista.getNombre();
+        }
+
+        modelPersecucion.setColumnIdentifiers(Titulo);
+        modelFuerzaN.setColumnIdentifiers(Titulo);
+        modelOutsourcing.setColumnIdentifiers(Titulo);
+
+        this.TablaPersecusion.setModel(modelPersecucion);
+        this.TablaFuerzaNivelada.setModel(modelFuerzaN);
+        this.TablaOutsourcing.setModel(modelOutsourcing);
+
+        JTableHeader headerP = TablaPersecusion.getTableHeader();
+        headerP.setFont(new Font("Tahoma", Font.BOLD, 14));
+
+        JTableHeader headerF = TablaFuerzaNivelada.getTableHeader();
+        headerF.setFont(new Font("Tahoma", Font.BOLD, 14));
+
+        JTableHeader headerO = TablaOutsourcing.getTableHeader();
+        headerO.setFont(new Font("Tahoma", Font.BOLD, 14));
+
+        TablaPersecusion.setDefaultRenderer(Object.class, new FormatoTabla());
+        TablaFuerzaNivelada.setDefaultRenderer(Object.class, new FormatoTabla());
+        TablaOutsourcing.setDefaultRenderer(Object.class, new FormatoTabla());
+
+        TableColumnModel columnModelP = TablaPersecusion.getColumnModel();
+        columnModelP.getColumn(0).setPreferredWidth(120); //Datos
+
+        TableColumnModel columnModelF = TablaFuerzaNivelada.getColumnModel();
+        columnModelF.getColumn(0).setPreferredWidth(100); //Datos
+
+        TableColumnModel columnModelO = TablaOutsourcing.getColumnModel();
+        columnModelO.getColumn(0).setPreferredWidth(90); //Datos
+
+        modelPersecucion.setRowCount(10);
+        modelPersecucion.setValueAt("Producción requerida", 0, 0);
+        modelPersecucion.setValueAt("Horas de producción requeridas", 1, 0);
+        modelPersecucion.setValueAt("Horas disponibles", 2, 0);
+        modelPersecucion.setValueAt("Cantidad de trabajadores requeridas", 3, 0);
+        modelPersecucion.setValueAt("Cantida de trabajadores contratados", 4, 0);
+        modelPersecucion.setValueAt("Cantida de trabajadores despedidos", 5, 0);
+        modelPersecucion.setValueAt("Costo por contratación", 6, 0);
+        modelPersecucion.setValueAt("Costo por despido", 7, 0);
+        modelPersecucion.setValueAt("Costo tiempo normal", 8, 0);
+        modelPersecucion.setValueAt("Costo total", 9, 0);
+
+        TablaPersecusion.setModel(modelPersecucion);
+
+        modelFuerzaN.setRowCount(9);
+        modelFuerzaN.setValueAt("Producción requerida", 0, 0);
+        modelFuerzaN.setValueAt("Horas de producción requeridas", 1, 0);
+        modelFuerzaN.setValueAt("Horas disponibles", 2, 0);
+        modelFuerzaN.setValueAt("Horas totales disponibles (N)", 3, 0);
+        modelFuerzaN.setValueAt("Horas extras requeridas", 4, 0);
+        modelFuerzaN.setValueAt("Horas ociosas", 5, 0);
+        modelFuerzaN.setValueAt("Costo tiempo normal", 6, 0);
+        modelFuerzaN.setValueAt("Costo tiempo extra", 7, 0);
+        modelFuerzaN.setValueAt("Costo total", 8, 0);
+
+        TablaFuerzaNivelada.setModel(modelFuerzaN);
+
+        modelOutsourcing.setRowCount(11);
+        modelOutsourcing.setValueAt("Producción requerida", 0, 0);
+        modelOutsourcing.setValueAt("Horas de producción requeridas", 1, 0);
+        modelOutsourcing.setValueAt("Horas disponibles", 2, 0);
+        modelOutsourcing.setValueAt("Horas totales disponibles (N)", 3, 0);
+        modelOutsourcing.setValueAt("Unidades producidas", 4, 0);
+        modelOutsourcing.setValueAt("Unidades faltantes", 5, 0);
+        modelOutsourcing.setValueAt("Unidades sobrantes", 6, 0);
+        modelOutsourcing.setValueAt("Costo tiempo normal", 7, 0);
+        modelOutsourcing.setValueAt("Costo por outsourcing", 8, 0);
+        modelOutsourcing.setValueAt("Costo por mantenimiento", 9, 0);
+        modelOutsourcing.setValueAt("Costo total", 10, 0);
+
+        TablaOutsourcing.setModel(modelOutsourcing);
+
+    }
+
 
     private void btnsaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsaveActionPerformed
         ValidarDatos();
+        Calcular();
+
         // TODO add your handling code here:
     }//GEN-LAST:event_btnsaveActionPerformed
 
@@ -1284,6 +1426,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         EnableAll();
         CleanAll();
+        txtHorasUnid.requestFocus();
 
     }//GEN-LAST:event_btnnewActionPerformed
 
@@ -1451,7 +1594,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         if (a == KeyEvent.VK_ENTER) {
             Agregar();
-            LimpiarDemanda();
+           
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDiasLabKeyTyped
@@ -1556,9 +1699,11 @@ public class PlaneacionP extends javax.swing.JFrame {
         DemandaD[2] = DemandaP;
         DemandaD[3] = Dias;
 
-        model.addRow(DemandaD);
+        modelDemanda.addRow(DemandaD);
 
-        TablaDemanda.setModel(model);
+        TablaDemanda.setModel(modelDemanda);
+
+        LimpiarDemanda();
 
     }
 
@@ -1572,7 +1717,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         Agregar();
-        LimpiarDemanda();// TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_btnAddActionPerformed
 
     public class FormatoTabla extends DefaultTableCellRenderer {
@@ -1580,10 +1725,12 @@ public class PlaneacionP extends javax.swing.JFrame {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
 
-            if (String.valueOf(table.getValueAt(row, 3)).equalsIgnoreCase("INACTIVO")) {
-                setForeground(Color.RED);
+            if (column == 0) {
+                setBackground(Color.GRAY);
+                setForeground(Color.WHITE);
             } else {
                 setForeground(Color.BLACK);
+                setBackground(Color.WHITE);
             }
 
             super.getTableCellRendererComponent(table, value, selected, focused, row, column);
@@ -1591,7 +1738,40 @@ public class PlaneacionP extends javax.swing.JFrame {
         }
     }
 
-    DefaultTableModel model = new DefaultTableModel() {
+    DefaultTableModel modelDemanda = new DefaultTableModel() {
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+
+            return false;
+        }
+        //all cells false
+
+    };
+
+    DefaultTableModel modelPersecucion = new DefaultTableModel() {
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+
+            return false;
+        }
+        //all cells false
+
+    };
+
+    DefaultTableModel modelFuerzaN = new DefaultTableModel() {
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+
+            return false;
+        }
+        //all cells false
+
+    };
+
+    DefaultTableModel modelOutsourcing = new DefaultTableModel() {
 
         @Override
         public boolean isCellEditable(int row, int column) {
