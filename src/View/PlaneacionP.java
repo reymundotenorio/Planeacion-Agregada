@@ -1309,8 +1309,10 @@ public class PlaneacionP extends javax.swing.JFrame {
     }
 
     ArrayList<DemandaPOJO> DemandaList;
+    ArrayList<Float> ProdRequeridaList;
 
     public void CalcularProduccionRequerida() {
+
         DemandaList = new ArrayList<>();
 
         for (int i = 0; i < TablaDemanda.getRowCount(); i++) {
@@ -1321,7 +1323,75 @@ public class PlaneacionP extends javax.swing.JFrame {
             DemandaList.add(new DemandaPOJO(Nombre, DemandaP, DiasLab));
         }
 
+        //Formato a tabla de estrategias
         TituloEstrategias();
+
+        String StockS = txtStockSeguridad.getText().trim();
+        String UnidsI = txtInvIni.getText().trim();
+        String HrsUnid = txtHorasUnid.getText().trim();
+               String TrabIni = txtIniTrab.getText().trim();
+
+        float SS = Float.valueOf(StockS);
+        float InvIni = Float.parseFloat(UnidsI);
+        float HorasUnid = Float.parseFloat(HrsUnid);
+               float TrabIniciales = Float.parseFloat(TrabIni);
+
+        SS = SS / 100;
+
+        ProdRequeridaList = new ArrayList<>();
+
+        //Cálculo de Demanda Requerida
+        for (DemandaPOJO DemandaLista : DemandaList) {
+
+            float DemandaP = DemandaLista.getDemandaP();
+            float StockSeguridad = DemandaP * SS;
+
+            float ProdReq = DemandaP + StockSeguridad;
+
+            ProdReq = ProdReq - InvIni;
+
+            InvIni = StockSeguridad;
+
+            ProdRequeridaList.add(ProdReq);
+        }
+
+        for (int k = 0; k < ProdRequeridaList.size(); k++) {
+
+            int Columna = k + 1;
+
+            //Cálculo de Producción Requerida
+            float ProdRequerida = ProdRequeridaList.get(k);
+            int DiasLaborables = DemandaList.get(k).getDiasLaborables();
+
+            modelPersecucion.setValueAt(ProdRequerida, 0, Columna);
+            modelFuerzaN.setValueAt(ProdRequerida, 0, Columna);
+            modelOutsourcing.setValueAt(ProdRequerida, 0, Columna);
+
+            //Cálculo de Horas Requeridas
+            float HrsProdReq = ProdRequerida * HorasUnid;
+
+            modelPersecucion.setValueAt(HrsProdReq, 1, Columna);
+            modelFuerzaN.setValueAt(HrsProdReq, 1, Columna);
+            modelOutsourcing.setValueAt(HrsProdReq, 1, Columna);
+
+            //Cálculo de Horas Disponibles
+            float HrsDisponM = DiasLaborables * 8;
+
+            modelPersecucion.setValueAt(HrsDisponM, 2, Columna);
+            modelFuerzaN.setValueAt(HrsDisponM, 2, Columna);
+            modelOutsourcing.setValueAt(HrsDisponM, 2, Columna);
+            
+             //Cálculo de Horas Disponibles (N)
+            float HrsDisponN = HrsDisponM * TrabIniciales;
+
+            modelFuerzaN.setValueAt(HrsDisponN, 3, Columna);
+            modelOutsourcing.setValueAt(HrsDisponN, 3, Columna);
+
+        }
+
+        TablaPersecusion.setModel(modelPersecucion);
+        TablaFuerzaNivelada.setModel(modelFuerzaN);
+        TablaOutsourcing.setModel(modelOutsourcing);
 
     }
 
@@ -1594,7 +1664,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         if (a == KeyEvent.VK_ENTER) {
             Agregar();
-           
+
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDiasLabKeyTyped
