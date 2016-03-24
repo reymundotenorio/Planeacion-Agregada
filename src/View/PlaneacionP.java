@@ -17,6 +17,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -72,6 +74,11 @@ public class PlaneacionP extends javax.swing.JFrame {
         txtInvIni.setTransferHandler(null);
         txtNombreP.setTransferHandler(null);
         txtStockSeguridad.setTransferHandler(null);
+
+        simbolo = new DecimalFormatSymbols();
+        simbolo.setDecimalSeparator('.');
+        simbolo.setGroupingSeparator(',');
+        df = new DecimalFormat("###,###.##", simbolo);
 
     }
 
@@ -133,19 +140,19 @@ public class PlaneacionP extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         TablaPersecusion = new javax.swing.JTable();
         PanelSecundario2 = new javax.swing.JPanel();
-        btnReporteP = new javax.swing.JButton();
+        lblTotalP = new javax.swing.JLabel();
         PanelFuerzaNivelada = new javax.swing.JPanel();
         PanelPrimario3 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         TablaFuerzaNivelada = new javax.swing.JTable();
         PanelSecundario3 = new javax.swing.JPanel();
-        btnReporteF = new javax.swing.JButton();
+        lblTotalF = new javax.swing.JLabel();
         PanelOutsourcing = new javax.swing.JPanel();
         PanelPrimario4 = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
         TablaOutsourcing = new javax.swing.JTable();
         PanelSecundario4 = new javax.swing.JPanel();
-        btnReporteO = new javax.swing.JButton();
+        jLabel18 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Planeación Agregada");
@@ -828,21 +835,9 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         PanelSecundario2.setBackground(new java.awt.Color(245, 127, 23));
 
-        btnReporteP.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnReporteP.setForeground(new java.awt.Color(255, 255, 255));
-        btnReporteP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Imprimir.png"))); // NOI18N
-        btnReporteP.setMnemonic('r');
-        btnReporteP.setText("Reporte");
-        btnReporteP.setToolTipText("Mostrar reporte");
-        btnReporteP.setContentAreaFilled(false);
-        btnReporteP.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnReporteP.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnReporteP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReportePActionPerformed(evt);
-            }
-        });
-        PanelSecundario2.add(btnReporteP);
+        lblTotalP.setFont(new java.awt.Font("Noto Sans", 1, 24)); // NOI18N
+        lblTotalP.setForeground(java.awt.Color.white);
+        PanelSecundario2.add(lblTotalP);
 
         PanelPrimario2.add(PanelSecundario2, java.awt.BorderLayout.PAGE_END);
 
@@ -889,21 +884,9 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         PanelSecundario3.setBackground(new java.awt.Color(245, 127, 23));
 
-        btnReporteF.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnReporteF.setForeground(new java.awt.Color(255, 255, 255));
-        btnReporteF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Imprimir.png"))); // NOI18N
-        btnReporteF.setMnemonic('r');
-        btnReporteF.setText("Reporte");
-        btnReporteF.setToolTipText("Mostrar reporte");
-        btnReporteF.setContentAreaFilled(false);
-        btnReporteF.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnReporteF.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnReporteF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReporteFActionPerformed(evt);
-            }
-        });
-        PanelSecundario3.add(btnReporteF);
+        lblTotalF.setFont(new java.awt.Font("Noto Sans", 1, 24)); // NOI18N
+        lblTotalF.setForeground(java.awt.Color.white);
+        PanelSecundario3.add(lblTotalF);
 
         PanelPrimario3.add(PanelSecundario3, java.awt.BorderLayout.PAGE_END);
 
@@ -950,21 +933,10 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         PanelSecundario4.setBackground(new java.awt.Color(245, 127, 23));
 
-        btnReporteO.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnReporteO.setForeground(new java.awt.Color(255, 255, 255));
-        btnReporteO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Imprimir.png"))); // NOI18N
-        btnReporteO.setMnemonic('r');
-        btnReporteO.setText("Reporte");
-        btnReporteO.setToolTipText("Mostrar reporte");
-        btnReporteO.setContentAreaFilled(false);
-        btnReporteO.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnReporteO.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnReporteO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReporteOActionPerformed(evt);
-            }
-        });
-        PanelSecundario4.add(btnReporteO);
+        jLabel18.setFont(new java.awt.Font("Noto Sans", 1, 24)); // NOI18N
+        jLabel18.setForeground(java.awt.Color.white);
+        jLabel18.setText("COSTO TOTAL DE LA ESTRATEGIA DE OUTSOURCING: ");
+        PanelSecundario4.add(jLabel18);
 
         PanelPrimario4.add(PanelSecundario4, java.awt.BorderLayout.PAGE_END);
 
@@ -977,6 +949,9 @@ public class PlaneacionP extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(1332, 761));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    DecimalFormatSymbols simbolo;
+    DecimalFormat df;
 
     public void CleanAll() {
         txtCtoContra.setText("");
@@ -1070,62 +1045,6 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         // TODO add your handling code here:
     }//GEN-LAST:event_TablaPersecusionFocusLost
-
-//    public void Reporte(ProcesandoInfo P) {
-//
-//        File miDir = new File("");
-//        String reporte = miDir.getAbsolutePath() + "/src/Reportes/Lugar.jasper";
-//
-//        JasperPrint jp = null;
-//
-//        try {
-//            jp = JasperFillManager.fillReport(reporte, null, Conexion.con);
-//        } catch (JRException ex) {
-//
-////                Logger.getLogger(LugarP.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        JasperViewer view = new JasperViewer(jp, false);
-//        view.setTitle("Lugar - Sistema Supervisor TPF");
-//
-//        view.setZoomRatio((float) 0.75);
-//        view.setVisible(true);
-//
-//        view.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-//        view.toFront();
-//        //     this.toBack();
-//
-//        //    this.setExtendedState(javax.swing.JFrame.CROSSHAIR_CURSOR); 
-//        P.dispose();
-//
-//    }
-//
-//    class VerReporte extends Thread {
-//
-//        ProcesandoInfo p;
-//
-//        public VerReporte(ProcesandoInfo P) {
-//            this.p = P;
-//        }
-//
-//        @Override
-//        public void run() {
-//
-//            Reporte(p);
-//
-//        }
-//    }
-
-    private void btnReportePActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportePActionPerformed
-//        // TODO add your handling code here:
-//
-//        ProcesandoInfo Procesando = new ProcesandoInfo();
-//
-//        Procesando.setVisible(true);
-//
-//        Procesando.toFront();
-//        new VerReporte(Procesando).start();
-    }//GEN-LAST:event_btnReportePActionPerformed
 
     public void Cerrar() {
 
@@ -1272,37 +1191,37 @@ public class PlaneacionP extends javax.swing.JFrame {
 
     public void Calcular() {
 
-        String HrsUnid, HorasN, HorasE, CtoUnid, IniTrab, Contra, Desp, OutS, InvI, SS, Mant, PerMant;
-
-        HrsUnid = txtHorasUnid.getText().trim();
-        HorasN = txtCtoHrsN.getText().trim();
-        HorasE = txtCtoHrsE.getText().trim();
-        CtoUnid = txtCtoUnid.getText().trim();
-        IniTrab = txtIniTrab.getText().trim();
-        Contra = txtCtoContra.getText().trim();
-        Desp = txtCtoDesp.getText().trim();
-        OutS = txtCtoOutsourcing.getText().trim();
-        InvI = txtInvIni.getText().trim();
-        SS = txtStockSeguridad.getText().trim();
-        Mant = txtCtoMant.getText().trim();
-        PerMant = (String) cmbPeriodoMant.getSelectedItem();
-
-        float HorasUnid, HorasNormales, HorasExtras, CostoUnidad, CtoContratar, CtoDespedir, CtoOutsourcing,
-                StockSeguridad, CtoMantenimiento;
-        int InicialTrabajadores, InventarioInicial;
-
-        HorasUnid = Float.parseFloat(HrsUnid);
-        HorasNormales = Float.parseFloat(HorasN);
-        HorasExtras = Float.parseFloat(HorasE);
-        CostoUnidad = Float.parseFloat(CtoUnid);
-        CtoContratar = Float.parseFloat(Contra);
-        CtoDespedir = Float.parseFloat(Desp);
-        CtoOutsourcing = Float.parseFloat(OutS);
-        StockSeguridad = Float.parseFloat(SS);
-        CtoMantenimiento = Float.parseFloat(Mant);
-
-        InicialTrabajadores = Integer.parseInt(IniTrab);
-        InventarioInicial = Integer.parseInt(InvI);
+//        String HrsUnid, HorasN, HorasE, CtoUnid, IniTrab, Contra, Desp, OutS, InvI, SS, Mant, PerMant;
+//
+//        HrsUnid = txtHorasUnid.getText().trim();
+//        HorasN = txtCtoHrsN.getText().trim();
+//        HorasE = txtCtoHrsE.getText().trim();
+//        CtoUnid = txtCtoUnid.getText().trim();
+//        IniTrab = txtIniTrab.getText().trim();
+//        Contra = txtCtoContra.getText().trim();
+//        Desp = txtCtoDesp.getText().trim();
+//        OutS = txtCtoOutsourcing.getText().trim();
+//        InvI = txtInvIni.getText().trim();
+//        SS = txtStockSeguridad.getText().trim();
+//        Mant = txtCtoMant.getText().trim();
+//        PerMant = (String) cmbPeriodoMant.getSelectedItem();
+//
+//        float HorasUnid, HorasNormales, HorasExtras, CostoUnidad, CtoContratar, CtoDespedir,
+//                CtoOutsourcing, StockSeguridad, CtoMantenimiento;
+//        int InicialTrabajadores, InventarioInicial;
+//
+//        HorasUnid = Float.parseFloat(HrsUnid);
+//        HorasNormales = Float.parseFloat(HorasN);
+//        HorasExtras = Float.parseFloat(HorasE);
+//        CostoUnidad = Float.parseFloat(CtoUnid);
+//        CtoContratar = Float.parseFloat(Contra);
+//        CtoDespedir = Float.parseFloat(Desp);
+//        CtoOutsourcing = Float.parseFloat(OutS);
+//        StockSeguridad = Float.parseFloat(SS);
+//        CtoMantenimiento = Float.parseFloat(Mant);
+//
+//        InicialTrabajadores = Integer.parseInt(IniTrab);
+//        InventarioInicial = Integer.parseInt(InvI);
 
         CalcularProduccionRequerida();
 
@@ -1371,35 +1290,35 @@ public class PlaneacionP extends javax.swing.JFrame {
             float ProdRequerida = ProdRequeridaList.get(k);
             int DiasLaborables = DemandaList.get(k).getDiasLaborables();
 
-            modelPersecucion.setValueAt(ProdRequerida, 0, Columna);
-            modelFuerzaN.setValueAt(ProdRequerida, 0, Columna);
-            modelOutsourcing.setValueAt(ProdRequerida, 0, Columna);
+            modelPersecucion.setValueAt(df.format(ProdRequerida), 0, Columna);
+            modelFuerzaN.setValueAt(df.format(ProdRequerida), 0, Columna);
+            modelOutsourcing.setValueAt(df.format(ProdRequerida), 0, Columna);
 
             //Cálculo de Horas Requeridas
             float HrsProdReq = ProdRequerida * HorasUnid;
 
             HorasProdReqList.add(HrsProdReq);
 
-            modelPersecucion.setValueAt(HrsProdReq, 1, Columna);
-            modelFuerzaN.setValueAt(HrsProdReq, 1, Columna);
-            modelOutsourcing.setValueAt(HrsProdReq, 1, Columna);
+            modelPersecucion.setValueAt(df.format(HrsProdReq), 1, Columna);
+            modelFuerzaN.setValueAt(df.format(HrsProdReq), 1, Columna);
+            modelOutsourcing.setValueAt(df.format(HrsProdReq), 1, Columna);
 
             //Cálculo de Horas Disponibles
             float HrsDisponM = DiasLaborables * 8;
 
             HorasDisponMList.add(HrsDisponM);
 
-            modelPersecucion.setValueAt(HrsDisponM, 2, Columna);
-            modelFuerzaN.setValueAt(HrsDisponM, 2, Columna);
-            modelOutsourcing.setValueAt(HrsDisponM, 2, Columna);
+            modelPersecucion.setValueAt(df.format(HrsDisponM), 2, Columna);
+            modelFuerzaN.setValueAt(df.format(HrsDisponM), 2, Columna);
+            modelOutsourcing.setValueAt(df.format(HrsDisponM), 2, Columna);
 
             //Cálculo de Horas Disponibles (N)
             float HrsDisponN = HrsDisponM * TrabIniciales;
 
             HorasDisponNList.add(HrsDisponN);
 
-            modelFuerzaN.setValueAt(HrsDisponN, 3, Columna);
-            modelOutsourcing.setValueAt(HrsDisponN, 3, Columna);
+            modelFuerzaN.setValueAt(df.format(HrsDisponN), 3, Columna);
+            modelOutsourcing.setValueAt(df.format(HrsDisponN), 3, Columna);
 
         }
 
@@ -1412,6 +1331,9 @@ public class PlaneacionP extends javax.swing.JFrame {
     }
 
     public void CalcularPersecucion() {
+
+        float TotalPersecucion = 0;
+
         String TrabIni = txtIniTrab.getText().trim();
 
         String CtoXContra = txtCtoContra.getText().trim();
@@ -1433,7 +1355,8 @@ public class PlaneacionP extends javax.swing.JFrame {
             float TrabReq = HorasReq / HorasDispon;
 
             TrabReq = (float) Math.ceil(TrabReq);
-            modelPersecucion.setValueAt(TrabReq, 3, Columna);
+            
+            modelPersecucion.setValueAt(df.format(TrabReq), 3, Columna);
 
             float TrabContratar = 0;
             float TrabDespedir = 0;
@@ -1453,8 +1376,8 @@ public class PlaneacionP extends javax.swing.JFrame {
 
             TrabInicial = TrabReq;
 
-            modelPersecucion.setValueAt(TrabContratar, 4, Columna);
-            modelPersecucion.setValueAt(TrabDespedir, 5, Columna);
+            modelPersecucion.setValueAt(df.format(TrabContratar), 4, Columna);
+            modelPersecucion.setValueAt(df.format(TrabDespedir), 5, Columna);
 
             //Cálculo de Costos de contratar, despedir y horas normales
             float HrsProdReq = HorasProdReqList.get(k);
@@ -1463,17 +1386,78 @@ public class PlaneacionP extends javax.swing.JFrame {
             float CtoDespedir = TrabDespedir * CtoXDespedir;
             float CtoHrsNormal = HrsProdReq * CtoXHrsNormal;
 
-            modelPersecucion.setValueAt(CtoContratar, 6, Columna);
-            modelPersecucion.setValueAt(CtoDespedir, 7, Columna);
-            modelPersecucion.setValueAt(CtoHrsNormal, 8, Columna);
+            modelPersecucion.setValueAt(df.format(CtoContratar), 6, Columna);
+            modelPersecucion.setValueAt(df.format(CtoDespedir), 7, Columna);
+            modelPersecucion.setValueAt(df.format(CtoHrsNormal), 8, Columna);
 
             float Total = CtoContratar + CtoDespedir + CtoHrsNormal;
 
-            modelPersecucion.setValueAt(Total, 9, Columna);
+            TotalPersecucion = TotalPersecucion + Total;
+
+            modelPersecucion.setValueAt(df.format(Total), 9, Columna);
         }
 
         TablaPersecusion.setModel(modelPersecucion);
 
+        lblTotalP.setText("COSTO TOTAL DE LA ESTRATEGIA DE PERSECUCIÓN: "
+                + df.format(TotalPersecucion));
+
+        CalcularFuerzaNivelada();
+    }
+
+    public void CalcularFuerzaNivelada() {
+
+        float TotalFuerzaNivelada = 0;
+
+        String CtoXHrsN = txtCtoHrsN.getText().trim();
+        String CtoXHrsE = txtCtoHrsE.getText().trim();
+
+        float CtoXHrsNormal = Float.parseFloat(CtoXHrsN);
+        float CtoXHrsExtras = Float.parseFloat(CtoXHrsE);
+
+        for (int k = 0; k < ProdRequeridaList.size(); k++) {
+            int Columna = k + 1;
+
+            float HorasDispon = HorasDisponNList.get(k);
+            float HorasReq = HorasProdReqList.get(k);
+
+            float HrsExtrasReq = 0;
+            float HrsOciosas = 0;
+
+            //Cálculo de horas extras requeridas y horas ociosas
+            if (HorasDispon >= HorasReq) { // Despedir
+
+                HrsOciosas = HorasDispon - HorasReq;
+                HrsExtrasReq = 0;
+
+            } else if (HorasDispon <= HorasReq) { //Contratar
+
+                HrsOciosas = 0;
+                HrsExtrasReq = HorasReq - HorasDispon;
+
+            }
+
+            modelFuerzaN.setValueAt(df.format(HrsExtrasReq), 4, Columna);
+            modelFuerzaN.setValueAt(df.format(HrsOciosas), 5, Columna);
+
+            //Cálculo de Costos de tiempo normal y horas extras
+            float CtoHrsNormal = HorasDispon * CtoXHrsNormal;
+            float CtoHrsExtras = HrsExtrasReq * CtoXHrsExtras;
+
+            modelFuerzaN.setValueAt(df.format(CtoHrsNormal), 6, Columna);
+            modelFuerzaN.setValueAt(df.format(CtoHrsExtras), 7, Columna);
+
+            float Total = CtoHrsNormal + CtoHrsExtras;
+
+            TotalFuerzaNivelada = TotalFuerzaNivelada + Total;
+
+            modelFuerzaN.setValueAt(df.format(Total), 8, Columna);
+        }
+
+        TablaFuerzaNivelada.setModel(modelFuerzaN);
+
+        lblTotalF.setText("COSTO TOTAL DE LA ESTRATEGIA DE FUERZA NIVELADA Y HORAS EXTRAS: "
+                + df.format(TotalFuerzaNivelada));
     }
 
     public void TituloEstrategias() {
@@ -1766,10 +1750,6 @@ public class PlaneacionP extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TablaFuerzaNiveladaMousePressed
 
-    private void btnReporteFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteFActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnReporteFActionPerformed
-
     private void TablaOutsourcingFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TablaOutsourcingFocusGained
         // TODO add your handling code here:
     }//GEN-LAST:event_TablaOutsourcingFocusGained
@@ -1785,10 +1765,6 @@ public class PlaneacionP extends javax.swing.JFrame {
     private void TablaOutsourcingMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaOutsourcingMousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_TablaOutsourcingMousePressed
-
-    private void btnReporteOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteOActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnReporteOActionPerformed
 
     private void txtDemandaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDemandaKeyTyped
 
@@ -2122,9 +2098,6 @@ public class PlaneacionP extends javax.swing.JFrame {
     private javax.swing.JTable TablaOutsourcing;
     private javax.swing.JTable TablaPersecusion;
     private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnReporteF;
-    private javax.swing.JButton btnReporteO;
-    private javax.swing.JButton btnReporteP;
     private javax.swing.JButton btnnew;
     private javax.swing.JButton btnsave;
     private javax.swing.JComboBox<String> cmbPeriodoMant;
@@ -2135,6 +2108,7 @@ public class PlaneacionP extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -2147,6 +2121,8 @@ public class PlaneacionP extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel lblTotalF;
+    private javax.swing.JLabel lblTotalP;
     private javax.swing.JTextField txtCtoContra;
     private javax.swing.JTextField txtCtoDesp;
     private javax.swing.JTextField txtCtoHrsE;
