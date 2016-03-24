@@ -584,10 +584,10 @@
                         </Property>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="4">
-                            <StringItem index="0" value="por hora"/>
-                            <StringItem index="1" value="por d&#xed;a"/>
-                            <StringItem index="2" value="por mes"/>
-                            <StringItem index="3" value="por a&#xf1;o"/>
+                            <StringItem index="0" value="unid x hora"/>
+                            <StringItem index="1" value="unid x d&#xed;a"/>
+                            <StringItem index="2" value="unid x mes"/>
+                            <StringItem index="3" value="unid x a&#xf1;o"/>
                           </StringArray>
                         </Property>
                         <Property name="enabled" type="boolean" value="false"/>
@@ -1066,7 +1066,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="jLabel18">
+                    <Component class="javax.swing.JLabel" name="lblTotalO">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Noto Sans" size="24" style="1"/>
@@ -1074,7 +1074,6 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="COSTO TOTAL DE LA ESTRATEGIA DE OUTSOURCING: "/>
                       </Properties>
                     </Component>
                   </SubComponents>

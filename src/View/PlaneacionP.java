@@ -152,7 +152,7 @@ public class PlaneacionP extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         TablaOutsourcing = new javax.swing.JTable();
         PanelSecundario4 = new javax.swing.JPanel();
-        jLabel18 = new javax.swing.JLabel();
+        lblTotalO = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Planeación Agregada");
@@ -619,7 +619,7 @@ public class PlaneacionP extends javax.swing.JFrame {
         Inputs.add(jLabel15, gridBagConstraints);
 
         cmbPeriodoMant.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
-        cmbPeriodoMant.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "por hora", "por día", "por mes", "por año" }));
+        cmbPeriodoMant.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "unid x hora", "unid x día", "unid x mes", "unid x año" }));
         cmbPeriodoMant.setEnabled(false);
         cmbPeriodoMant.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -933,10 +933,9 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         PanelSecundario4.setBackground(new java.awt.Color(245, 127, 23));
 
-        jLabel18.setFont(new java.awt.Font("Noto Sans", 1, 24)); // NOI18N
-        jLabel18.setForeground(java.awt.Color.white);
-        jLabel18.setText("COSTO TOTAL DE LA ESTRATEGIA DE OUTSOURCING: ");
-        PanelSecundario4.add(jLabel18);
+        lblTotalO.setFont(new java.awt.Font("Noto Sans", 1, 24)); // NOI18N
+        lblTotalO.setForeground(java.awt.Color.white);
+        PanelSecundario4.add(lblTotalO);
 
         PanelPrimario4.add(PanelSecundario4, java.awt.BorderLayout.PAGE_END);
 
@@ -1222,7 +1221,6 @@ public class PlaneacionP extends javax.swing.JFrame {
 //
 //        InicialTrabajadores = Integer.parseInt(IniTrab);
 //        InventarioInicial = Integer.parseInt(InvI);
-
         CalcularProduccionRequerida();
 
     }
@@ -1330,9 +1328,11 @@ public class PlaneacionP extends javax.swing.JFrame {
 
     }
 
-    public void CalcularPersecucion() {
+    float TotalOutsourcing = 0;
+    float TotalFuerzaNivelada = 0;
+    float TotalPersecucion = 0;
 
-        float TotalPersecucion = 0;
+    public void CalcularPersecucion() {
 
         String TrabIni = txtIniTrab.getText().trim();
 
@@ -1355,7 +1355,7 @@ public class PlaneacionP extends javax.swing.JFrame {
             float TrabReq = HorasReq / HorasDispon;
 
             TrabReq = (float) Math.ceil(TrabReq);
-            
+
             modelPersecucion.setValueAt(df.format(TrabReq), 3, Columna);
 
             float TrabContratar = 0;
@@ -1407,8 +1407,6 @@ public class PlaneacionP extends javax.swing.JFrame {
 
     public void CalcularFuerzaNivelada() {
 
-        float TotalFuerzaNivelada = 0;
-
         String CtoXHrsN = txtCtoHrsN.getText().trim();
         String CtoXHrsE = txtCtoHrsE.getText().trim();
 
@@ -1425,12 +1423,12 @@ public class PlaneacionP extends javax.swing.JFrame {
             float HrsOciosas = 0;
 
             //Cálculo de horas extras requeridas y horas ociosas
-            if (HorasDispon >= HorasReq) { // Despedir
+            if (HorasDispon >= HorasReq) { // Horas Ociosas
 
                 HrsOciosas = HorasDispon - HorasReq;
                 HrsExtrasReq = 0;
 
-            } else if (HorasDispon <= HorasReq) { //Contratar
+            } else if (HorasDispon <= HorasReq) { //Horas Extras
 
                 HrsOciosas = 0;
                 HrsExtrasReq = HorasReq - HorasDispon;
@@ -1458,6 +1456,118 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         lblTotalF.setText("COSTO TOTAL DE LA ESTRATEGIA DE FUERZA NIVELADA Y HORAS EXTRAS: "
                 + df.format(TotalFuerzaNivelada));
+
+        CalcularOutsourcing();
+    }
+
+    public void CalcularOutsourcing() {
+
+        String CtoXUnid = txtCtoUnid.getText().trim();
+        String CtoXOutS = txtCtoOutsourcing.getText().trim();
+        String CtoMant = txtCtoMant.getText().trim();
+        String HrsUnid = txtHorasUnid.getText().trim();
+        String CtoXHrsN = txtCtoHrsN.getText().trim();
+
+        float CtoXUnidad = Float.parseFloat(CtoXUnid);
+        float CtoOutsourcing = Float.parseFloat(CtoXOutS);
+        float CtoMantenimiento = Float.parseFloat(CtoMant);
+        float HorasUnidad = Float.parseFloat(HrsUnid);
+        float CtoXHrsNormal = Float.parseFloat(CtoXHrsN);
+
+        int PeriodMant = cmbPeriodoMant.getSelectedIndex();
+
+        switch (PeriodMant) {
+            case 0:
+                CtoMantenimiento = CtoMantenimiento * (8 * 30); //de horas a mes
+                break;
+            case 1:
+                CtoMantenimiento = CtoMantenimiento * 30; //de días a mes
+                break;
+            case 2:  //de mes a mes :/
+                break;
+            case 3:
+                CtoMantenimiento = CtoMantenimiento / 12; //de año a mes
+                break;
+            default:
+                break;
+        }
+
+        CtoOutsourcing = CtoOutsourcing - CtoXUnidad;
+
+        float UnidsSobrantes = 0;
+
+        for (int k = 0; k < ProdRequeridaList.size(); k++) {
+            int Columna = k + 1;
+
+            float HorasDispon = HorasDisponNList.get(k);
+            float ProdReq = ProdRequeridaList.get(k);
+
+            float UnidsFaltantes = 0;
+
+            float UnidadesProducidas = HorasDispon / HorasUnidad;
+
+            modelOutsourcing.setValueAt(df.format(UnidadesProducidas), 4, Columna);
+
+            //Cálculo de unidades faltantes y unidades sobrantes
+            if (ProdReq >= UnidadesProducidas) { // Faltantes
+
+                UnidsSobrantes = UnidsSobrantes + 0;
+                UnidsFaltantes = ProdReq - UnidadesProducidas;
+
+                if (UnidsSobrantes > 0) {
+
+                    if (UnidsSobrantes >= UnidsFaltantes) {
+
+                        UnidsSobrantes = UnidsSobrantes - UnidsFaltantes;
+                        UnidsFaltantes = 0;
+
+                    } else if (UnidsSobrantes <= UnidsFaltantes) {
+
+                        UnidsFaltantes = UnidsFaltantes - UnidsSobrantes;
+                        UnidsSobrantes = 0;
+
+                    }
+                }
+
+            } else if (ProdReq <= UnidadesProducidas) { //Sobrantes
+
+                UnidsFaltantes = 0;
+                UnidsSobrantes = UnidsSobrantes + (UnidadesProducidas - ProdReq);
+
+            }
+
+            modelOutsourcing.setValueAt(df.format(UnidsFaltantes), 5, Columna);
+            modelOutsourcing.setValueAt(df.format(UnidsSobrantes), 6, Columna);
+
+            //Cálculo de Costos de tiempo normal y outsourcing
+            float CtoHrsNormal = HorasDispon * CtoXHrsNormal;
+            float CtoxOutsourcing = UnidsFaltantes * CtoOutsourcing;
+
+            modelOutsourcing.setValueAt(df.format(CtoHrsNormal), 7, Columna);
+            modelOutsourcing.setValueAt(df.format(CtoxOutsourcing), 8, Columna);
+
+            //Cálculo de Costos de mantenimiento
+            float CtoxMantenimiento = UnidsSobrantes * CtoMantenimiento;
+
+            modelOutsourcing.setValueAt(df.format(CtoxMantenimiento), 9, Columna);
+
+            float Total = CtoHrsNormal + CtoxOutsourcing + CtoxMantenimiento;
+
+            TotalOutsourcing = TotalOutsourcing + Total;
+
+            modelOutsourcing.setValueAt(df.format(Total), 10, Columna);
+        }
+
+        TablaOutsourcing.setModel(modelOutsourcing);
+
+        lblTotalO.setText("COSTO TOTAL DE LA ESTRATEGIA DE OUTSOURCING: "
+                + df.format(TotalOutsourcing));
+
+        JOptionPane.showMessageDialog(this, "COSTOS TOTALES:"
+                + "\n-> ESTRATEGIA PERSECUCIÓN: " + df.format(TotalPersecucion)
+                + "\n-> ESTRATEGIA FUERZA NIVELADA Y HORAS EXTRAS: " + df.format(TotalFuerzaNivelada)
+                + "\n-> ESTRATEGIA OUTSOURCING: " + df.format(TotalOutsourcing),
+                "TOTAL", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void TituloEstrategias() {
@@ -2108,7 +2218,6 @@ public class PlaneacionP extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -2122,6 +2231,7 @@ public class PlaneacionP extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JLabel lblTotalF;
+    private javax.swing.JLabel lblTotalO;
     private javax.swing.JLabel lblTotalP;
     private javax.swing.JTextField txtCtoContra;
     private javax.swing.JTextField txtCtoDesp;
