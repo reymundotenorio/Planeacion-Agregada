@@ -132,6 +132,9 @@ public class PlaneacionP extends javax.swing.JFrame {
         btnAdd = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         txtDemanda = new javax.swing.JTextField();
+        btnDelete = new javax.swing.JButton();
+        btnModify = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         TablaD = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDemanda = new javax.swing.JTable();
@@ -183,7 +186,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         btnnew.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnnew.setForeground(new java.awt.Color(255, 255, 255));
-        btnnew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Nuevo.png"))); // NOI18N
+        btnnew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/Nuevo.png"))); // NOI18N
         btnnew.setMnemonic('n');
         btnnew.setText("Nuevo");
         btnnew.setToolTipText("Nuevo registro");
@@ -199,7 +202,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         btnsave.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnsave.setForeground(new java.awt.Color(255, 255, 255));
-        btnsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Generar.png"))); // NOI18N
+        btnsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/Generar.png"))); // NOI18N
         btnsave.setMnemonic('c');
         btnsave.setText("Calcular");
         btnsave.setToolTipText("Guardar Registro");
@@ -661,10 +664,11 @@ public class PlaneacionP extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
         gridBagConstraints.ipadx = 154;
         gridBagConstraints.ipady = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 20, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 20, 0, 0);
         DatosD.add(txtNombreP, gridBagConstraints);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -673,10 +677,9 @@ public class PlaneacionP extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipady = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(13, 50, 22, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 18, 0, 0);
         DatosD.add(jLabel7, gridBagConstraints);
 
         /*CustomTextField customTextField = new CustomTextField(100);
@@ -696,6 +699,7 @@ public class PlaneacionP extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 4;
         gridBagConstraints.ipadx = 75;
         gridBagConstraints.ipady = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -708,10 +712,9 @@ public class PlaneacionP extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipady = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(13, 50, 22, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 50, 0, 0);
         DatosD.add(jLabel5, gridBagConstraints);
 
         btnAdd.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
@@ -726,11 +729,11 @@ public class PlaneacionP extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.gridheight = 5;
         gridBagConstraints.ipadx = 16;
         gridBagConstraints.ipady = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(14, 50, 22, 181);
+        gridBagConstraints.insets = new java.awt.Insets(12, 30, 17, 0);
         DatosD.add(btnAdd, gridBagConstraints);
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -739,10 +742,9 @@ public class PlaneacionP extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipady = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(13, 41, 22, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 41, 0, 0);
         DatosD.add(jLabel16, gridBagConstraints);
 
         /*CustomTextField customTextField = new CustomTextField(100);
@@ -762,11 +764,61 @@ public class PlaneacionP extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
         gridBagConstraints.ipadx = 75;
         gridBagConstraints.ipady = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 20, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 20, 0, 0);
         DatosD.add(txtDemanda, gridBagConstraints);
+
+        btnDelete.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
+        btnDelete.setText("Eliminar");
+        btnDelete.setEnabled(false);
+        btnDelete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.ipadx = 15;
+        gridBagConstraints.ipady = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 8, 17, 18);
+        DatosD.add(btnDelete, gridBagConstraints);
+
+        btnModify.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
+        btnModify.setText("Modificar");
+        btnModify.setEnabled(false);
+        btnModify.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnModify.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModifyActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.ipadx = 7;
+        gridBagConstraints.ipady = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 5, 17, 0);
+        DatosD.add(btnModify, gridBagConstraints);
+
+        jLabel1.setFont(new java.awt.Font("Noto Sans", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(187, 128, 24));
+        jLabel1.setText("|");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(9, 5, 0, 0);
+        DatosD.add(jLabel1, gridBagConstraints);
 
         Demanda.add(DatosD, java.awt.BorderLayout.PAGE_START);
 
@@ -784,6 +836,22 @@ public class PlaneacionP extends javax.swing.JFrame {
             }
         ));
         TablaDemanda.getTableHeader().setReorderingAllowed(false);
+        TablaDemanda.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                TablaDemandaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                TablaDemandaFocusLost(evt);
+            }
+        });
+        TablaDemanda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                TablaDemandaMousePressed(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDemandaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(TablaDemanda);
 
         TablaD.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -968,6 +1036,9 @@ public class PlaneacionP extends javax.swing.JFrame {
         txtNombreP.setText("");
         txtStockSeguridad.setText("");
         cmbPeriodoMant.setSelectedIndex(0);
+
+        Modify = false;
+        Numero = 0;
 
     }
 
@@ -1902,11 +1973,15 @@ public class PlaneacionP extends javax.swing.JFrame {
     private int Num;
 
     public void Agregar() {
-        String Numero, Nombre, DemandaP, Dias;
+        String NumeroP, Nombre, DemandaP, Dias;
 
-        Num++;
+        if (!Modify) { // Si es nuevo
+            this.Num++;
+            NumeroP = String.valueOf(this.Num);
+        } else { // Si es modificación
+            NumeroP = String.valueOf(this.Numero);
+        }
 
-        Numero = String.valueOf(Num);
         Nombre = txtNombreP.getText().trim();
         DemandaP = txtDemanda.getText().trim();
         Dias = txtDiasLab.getText().trim();
@@ -1929,14 +2004,22 @@ public class PlaneacionP extends javax.swing.JFrame {
             return;
         }
 
+        if(!Modify){ // Si es nuevo
         String[] DemandaD = new String[4];
 
-        DemandaD[0] = Numero;
+        DemandaD[0] = NumeroP;
         DemandaD[1] = Nombre;
         DemandaD[2] = DemandaP;
         DemandaD[3] = Dias;
 
         modelDemanda.addRow(DemandaD);
+        }
+        else{ // Si es modificación
+          modelDemanda.setValueAt(NumeroP, FilaM, 0); // Num
+          modelDemanda.setValueAt(Nombre, FilaM, 1); // Nombre
+          modelDemanda.setValueAt(DemandaP, FilaM, 2); // DemandaP
+          modelDemanda.setValueAt(Dias, FilaM, 3); // DiasLab   
+        }
 
         TablaDemanda.setModel(modelDemanda);
 
@@ -1945,6 +2028,11 @@ public class PlaneacionP extends javax.swing.JFrame {
     }
 
     public void LimpiarDemanda() {
+
+        Modify = false;
+        Numero = 0;
+        FilaM = -1;
+
         txtNombreP.setText("");
         txtDemanda.setText("");
         txtDiasLab.setText("");
@@ -1952,10 +2040,113 @@ public class PlaneacionP extends javax.swing.JFrame {
         txtNombreP.requestFocus();
     }
 
+    public void ActivarBotones() {
+
+        int Fila = TablaDemanda.getSelectedRow();
+
+        if (Fila > -1) {
+            btnModify.setEnabled(true);
+            btnDelete.setEnabled(true);
+        } else {
+            btnModify.setEnabled(false);
+            btnDelete.setEnabled(false);
+        }
+    }
+
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         Agregar();
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        EliminarDemanda();// TODO add your handling code here:
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private int Numero;
+    private int FilaM;
+    private boolean Modify;
+
+    public void ModificarDemanda() {
+        int fila = TablaDemanda.getSelectedRow();
+
+        String Nombre, DemandaP, DiasLab;
+
+        if (fila > -1) {
+
+            Numero = Integer.parseInt(this.TablaDemanda.getModel().getValueAt(fila, 0).toString());
+            Nombre = ((String) this.TablaDemanda.getModel().getValueAt(fila, 1));
+            DemandaP = ((String) this.TablaDemanda.getModel().getValueAt(fila, 2));
+            DiasLab = ((String) this.TablaDemanda.getModel().getValueAt(fila, 3));
+
+            txtNombreP.setText(Nombre);
+            txtDemanda.setText(DemandaP);
+            txtDiasLab.setText(DiasLab);
+
+            Modify = true;
+                        
+            FilaM = fila;
+            txtNombreP.requestFocus();
+            
+            btnDelete.setEnabled(false);
+            btnModify.setEnabled(false);
+
+        } else {
+
+            JOptionPane.showMessageDialog(this, "Seleccione una Demanda a modificar", "Seleccione", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+
+    public void EliminarDemanda() {
+
+        int fila = TablaDemanda.getSelectedRow();
+
+        String NumeroD, Nombre;
+
+        if (fila > -1) {
+
+            NumeroD = ((String) this.TablaDemanda.getModel().getValueAt(fila, 0));
+            Nombre = ((String) this.TablaDemanda.getModel().getValueAt(fila, 1));
+
+            int Opcion = JOptionPane.showConfirmDialog(this, "Desea eliminar la Demanda " + Nombre + " - Número " + NumeroD);
+
+            if (Opcion == JOptionPane.YES_OPTION) {
+                modelDemanda.removeRow(fila);
+                TablaDemanda.setModel(modelDemanda);
+                LimpiarDemanda();
+            }
+
+        } else {
+
+            JOptionPane.showMessageDialog(this, "Seleccione una Demanda a eliminar", "Seleccione", JOptionPane.ERROR_MESSAGE);
+
+        }
+
+    }
+
+    private void btnModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyActionPerformed
+        ModificarDemanda();  // TODO add your handling code here:
+    }//GEN-LAST:event_btnModifyActionPerformed
+
+    private void TablaDemandaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TablaDemandaFocusGained
+        ActivarBotones();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TablaDemandaFocusGained
+
+    private void TablaDemandaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TablaDemandaFocusLost
+        ActivarBotones();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TablaDemandaFocusLost
+
+    private void TablaDemandaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDemandaMouseClicked
+        ActivarBotones();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TablaDemandaMouseClicked
+
+    private void TablaDemandaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDemandaMousePressed
+        ActivarBotones();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TablaDemandaMousePressed
 
     public class FormatoTabla extends DefaultTableCellRenderer {
 
@@ -2208,9 +2399,12 @@ public class PlaneacionP extends javax.swing.JFrame {
     private javax.swing.JTable TablaOutsourcing;
     private javax.swing.JTable TablaPersecusion;
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnModify;
     private javax.swing.JButton btnnew;
     private javax.swing.JButton btnsave;
     private javax.swing.JComboBox<String> cmbPeriodoMant;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
