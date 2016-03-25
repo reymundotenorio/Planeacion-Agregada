@@ -5,11 +5,11 @@
  */
 package View;
 
-import Controlador.DemandaPOJO;
-import Controlador.ObtenerIcono;
-import static Controlador.ValidarCadena.ValidarCadena;
-import static Controlador.ValidarCadena.ValidarEntero;
-import static Controlador.ValidarCadena.ValidarFloat;
+import Controller.DemandaPOJO;
+import Controller.ObtenerIcono;
+import static Controller.ValidarCadena.ValidarCadena;
+import static Controller.ValidarCadena.ValidarEntero;
+import static Controller.ValidarCadena.ValidarFloat;
 import com.keffect.effects.animatedEffects.EntryBoucing;
 import com.keffect.effects.animatedEffects.Shape;
 import com.keffectpanel.KEffectPanel;

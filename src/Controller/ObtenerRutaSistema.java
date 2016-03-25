@@ -3,21 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controlador;
+package Controller;
 
-import java.awt.Image;
-import javax.swing.ImageIcon;
+import java.net.URL;
 
 /**
  *
  * @author Reymundo Tenorio
  */
-public class ObtenerIcono {
+public class ObtenerRutaSistema {
 
    
-    public Image ObtenerIcono(String NombreIcono) {
+    public URL ObtenerRuta(String NombreArchivo) {
         
-          return new ImageIcon(getClass().getResource(NombreIcono)).getImage();
+           System.out.println(getClass().getResource(NombreArchivo));
+          return getClass().getResource(NombreArchivo);
         
     }
     
