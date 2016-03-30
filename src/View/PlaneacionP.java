@@ -5,11 +5,19 @@
  */
 package View;
 
-import Controller.DemandaPOJO;
+import POJO.DemandaPOJO;
 import Controller.ObtenerIcono;
+import POJO.PersecucionPOJO;
 import static Controller.ValidarCadena.ValidarCadena;
 import static Controller.ValidarCadena.ValidarEntero;
 import static Controller.ValidarCadena.ValidarFloat;
+import POJO.DemandaRPOJO;
+import POJO.FuerzaNPOJO;
+import POJO.InfoPOJO;
+import POJO.OutsourcingPOJO;
+import Reports.FuerzaNDataSource;
+import Reports.OutsourcingDataSource;
+import Reports.PersecucionDataSource;
 import com.keffect.effects.animatedEffects.EntryBoucing;
 import com.keffect.effects.animatedEffects.Shape;
 import com.keffectpanel.KEffectPanel;
@@ -17,6 +25,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -29,6 +38,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -97,6 +110,7 @@ public class PlaneacionP extends javax.swing.JFrame {
         PanelSecundario = new javax.swing.JPanel();
         btnnew = new javax.swing.JButton();
         btnsave = new javax.swing.JButton();
+        btnReport = new javax.swing.JButton();
         PanelPrimario = new javax.swing.JPanel();
         Inputs = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -205,7 +219,7 @@ public class PlaneacionP extends javax.swing.JFrame {
         btnsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/Generar.png"))); // NOI18N
         btnsave.setMnemonic('c');
         btnsave.setText("Calcular");
-        btnsave.setToolTipText("Guardar Registro");
+        btnsave.setToolTipText("Calcular estrategias");
         btnsave.setContentAreaFilled(false);
         btnsave.setEnabled(false);
         btnsave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -216,6 +230,23 @@ public class PlaneacionP extends javax.swing.JFrame {
             }
         });
         PanelSecundario.add(btnsave);
+
+        btnReport.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btnReport.setForeground(new java.awt.Color(255, 255, 255));
+        btnReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/Imprimir.png"))); // NOI18N
+        btnReport.setMnemonic('c');
+        btnReport.setText("PDF");
+        btnReport.setToolTipText("Guardar resultados");
+        btnReport.setContentAreaFilled(false);
+        btnReport.setEnabled(false);
+        btnReport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnReport.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
+            }
+        });
+        PanelSecundario.add(btnReport);
 
         PanelNuevo.add(PanelSecundario, java.awt.BorderLayout.PAGE_END);
 
@@ -1040,6 +1071,19 @@ public class PlaneacionP extends javax.swing.JFrame {
         Modify = false;
         Numero = 0;
 
+        modelDemanda.setRowCount(0);
+        modelPersecucion.setRowCount(0);
+        modelFuerzaN.setRowCount(0);
+        modelOutsourcing.setRowCount(0);
+
+        TablaDemanda.setModel(modelDemanda);
+        TablaPersecusion.setModel(modelPersecucion);
+        TablaFuerzaNivelada.setModel(modelFuerzaN);
+        TablaOutsourcing.setModel(modelOutsourcing);
+
+        lblTotalF.setText("");
+        lblTotalP.setText("");
+        lblTotalO.setText("");
     }
 
     public void EnableAll() {
@@ -1062,6 +1106,7 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         btnsave.setEnabled(true);
         btnAdd.setEnabled(true);
+        btnReport.setEnabled(false);
 
     }
 
@@ -1481,8 +1526,40 @@ public class PlaneacionP extends javax.swing.JFrame {
         String CtoXHrsN = txtCtoHrsN.getText().trim();
         String CtoXHrsE = txtCtoHrsE.getText().trim();
 
+        String HrsUnid = txtHorasUnid.getText().trim();
+        String CtoXOutS = txtCtoOutsourcing.getText().trim();
+        String CtoMant = txtCtoMant.getText().trim();
+        String CtoXUnid = txtCtoUnid.getText().trim();
+
         float CtoXHrsNormal = Float.parseFloat(CtoXHrsN);
         float CtoXHrsExtras = Float.parseFloat(CtoXHrsE);
+
+        float HorasUnidad = Float.parseFloat(HrsUnid);
+        float CtoOutsourcing = Float.parseFloat(CtoXOutS);
+        float CtoMantenimiento = Float.parseFloat(CtoMant);
+        float CtoXUnidad = Float.parseFloat(CtoXUnid);
+
+        int PeriodMant = cmbPeriodoMant.getSelectedIndex();
+
+        switch (PeriodMant) {
+            case 0:
+                CtoMantenimiento = CtoMantenimiento * (8 * 30); //de horas a mes
+                break;
+            case 1:
+                CtoMantenimiento = CtoMantenimiento * 30; //de días a mes
+                break;
+            case 2:  //de mes a mes :/
+                break;
+            case 3:
+                CtoMantenimiento = CtoMantenimiento / 12; //de año a mes
+                break;
+            default:
+                break;
+        }
+
+        CtoOutsourcing = CtoOutsourcing - CtoXUnidad;
+
+        float UnidsSobrantes = 0;
 
         for (int k = 0; k < ProdRequeridaList.size(); k++) {
             int Columna = k + 1;
@@ -1490,6 +1567,47 @@ public class PlaneacionP extends javax.swing.JFrame {
             float HorasDispon = HorasDisponNList.get(k);
             float HorasReq = HorasProdReqList.get(k);
 
+            // Agregando parte de Outsourcing a Fuerza Nivelada
+            float UnidsFaltantes = 0;
+
+            float ProdReq = ProdRequeridaList.get(k);
+
+            float UnidadesProducidas = HorasDispon / HorasUnidad;
+
+            modelFuerzaN.setValueAt(df.format(UnidadesProducidas), 4, Columna);
+
+            //Cálculo de unidades faltantes y unidades sobrantes
+            if (ProdReq >= UnidadesProducidas) { // Faltantes
+
+                UnidsSobrantes = UnidsSobrantes + 0;
+                UnidsFaltantes = ProdReq - UnidadesProducidas;
+
+                if (UnidsSobrantes > 0) {
+
+                    if (UnidsSobrantes >= UnidsFaltantes) {
+
+                        UnidsSobrantes = UnidsSobrantes - UnidsFaltantes;
+                        UnidsFaltantes = 0;
+
+                    } else if (UnidsSobrantes <= UnidsFaltantes) {
+
+                        UnidsFaltantes = UnidsFaltantes - UnidsSobrantes;
+                        UnidsSobrantes = 0;
+
+                    }
+                }
+
+            } else if (ProdReq <= UnidadesProducidas) { //Sobrantes
+
+                UnidsFaltantes = 0;
+                UnidsSobrantes = UnidsSobrantes + (UnidadesProducidas - ProdReq);
+
+            }
+
+            modelFuerzaN.setValueAt(df.format(UnidsFaltantes), 5, Columna);
+            modelFuerzaN.setValueAt(df.format(UnidsSobrantes), 6, Columna); //Cálculo de Costos de tiempo normal y outsourcing
+
+            //Fin Outsourcing
             float HrsExtrasReq = 0;
             float HrsOciosas = 0;
 
@@ -1506,21 +1624,32 @@ public class PlaneacionP extends javax.swing.JFrame {
 
             }
 
-            modelFuerzaN.setValueAt(df.format(HrsExtrasReq), 4, Columna);
-            modelFuerzaN.setValueAt(df.format(HrsOciosas), 5, Columna);
+            modelFuerzaN.setValueAt(df.format(HrsExtrasReq), 7, Columna);
+            modelFuerzaN.setValueAt(df.format(HrsOciosas), 8, Columna);
+
+            //Cálculo de Costos de outsourcing en Fuerza Nivelada
+            float CtoxOutsourcing = UnidsFaltantes * CtoOutsourcing;
+
+            modelFuerzaN.setValueAt(df.format(CtoxOutsourcing), 9, Columna);
+
+            //Cálculo de Costos de mantenimiento
+            float CtoxMantenimiento = UnidsSobrantes * CtoMantenimiento;
+
+            modelFuerzaN.setValueAt(df.format(CtoxMantenimiento), 10, Columna);
+            //Fin de Costos de outsourcing en Fuerza Nivelada
 
             //Cálculo de Costos de tiempo normal y horas extras
             float CtoHrsNormal = HorasDispon * CtoXHrsNormal;
             float CtoHrsExtras = HrsExtrasReq * CtoXHrsExtras;
 
-            modelFuerzaN.setValueAt(df.format(CtoHrsNormal), 6, Columna);
-            modelFuerzaN.setValueAt(df.format(CtoHrsExtras), 7, Columna);
+            modelFuerzaN.setValueAt(df.format(CtoHrsNormal), 11, Columna);
+            modelFuerzaN.setValueAt(df.format(CtoHrsExtras), 12, Columna);
 
-            float Total = CtoHrsNormal + CtoHrsExtras;
+            float Total = CtoHrsNormal + CtoHrsExtras + CtoxOutsourcing + CtoxMantenimiento;
 
             TotalFuerzaNivelada = TotalFuerzaNivelada + Total;
 
-            modelFuerzaN.setValueAt(df.format(Total), 8, Columna);
+            modelFuerzaN.setValueAt(df.format(Total), 13, Columna);
         }
 
         TablaFuerzaNivelada.setModel(modelFuerzaN);
@@ -1690,9 +1819,9 @@ public class PlaneacionP extends javax.swing.JFrame {
         modelPersecucion.setValueAt("Producción requerida", 0, 0);
         modelPersecucion.setValueAt("Horas de producción requeridas", 1, 0);
         modelPersecucion.setValueAt("Horas disponibles", 2, 0);
-        modelPersecucion.setValueAt("Cantidad de trabajadores requeridas", 3, 0);
-        modelPersecucion.setValueAt("Cantida de trabajadores contratados", 4, 0);
-        modelPersecucion.setValueAt("Cantida de trabajadores despedidos", 5, 0);
+        modelPersecucion.setValueAt("Cantidad de trabajadores requeridos", 3, 0);
+        modelPersecucion.setValueAt("Cantidad de trabajadores contratados", 4, 0);
+        modelPersecucion.setValueAt("Cantidad de trabajadores despedidos", 5, 0);
         modelPersecucion.setValueAt("Costo por contratación", 6, 0);
         modelPersecucion.setValueAt("Costo por despido", 7, 0);
         modelPersecucion.setValueAt("Costo tiempo normal", 8, 0);
@@ -1700,16 +1829,29 @@ public class PlaneacionP extends javax.swing.JFrame {
 
         TablaPersecusion.setModel(modelPersecucion);
 
-        modelFuerzaN.setRowCount(9);
+        modelFuerzaN.setRowCount(14);
         modelFuerzaN.setValueAt("Producción requerida", 0, 0);
         modelFuerzaN.setValueAt("Horas de producción requeridas", 1, 0);
         modelFuerzaN.setValueAt("Horas disponibles", 2, 0);
         modelFuerzaN.setValueAt("Horas totales disponibles (N)", 3, 0);
-        modelFuerzaN.setValueAt("Horas extras requeridas", 4, 0);
-        modelFuerzaN.setValueAt("Horas ociosas", 5, 0);
-        modelFuerzaN.setValueAt("Costo tiempo normal", 6, 0);
-        modelFuerzaN.setValueAt("Costo tiempo extra", 7, 0);
-        modelFuerzaN.setValueAt("Costo total", 8, 0);
+
+        //Agregando parte de outsourcing a Fuerza Nivelada
+        modelFuerzaN.setValueAt("Unidades producidas", 4, 0);
+        modelFuerzaN.setValueAt("Unidades faltantes", 5, 0);
+        modelFuerzaN.setValueAt("Unidades sobrantes", 6, 0);
+        //Fin de outsourcing en Fuerza Nivelada
+
+        modelFuerzaN.setValueAt("Horas extras requeridas", 7, 0);
+        modelFuerzaN.setValueAt("Horas ociosas", 8, 0);
+
+        //Costo outsourcing en Fuerza Nivelada
+        modelFuerzaN.setValueAt("Costo por outsourcing", 9, 0);
+        modelFuerzaN.setValueAt("Costo por mantenimiento", 10, 0);
+        //Fin de Costo outsourcing en Fuerza Nivelada
+
+        modelFuerzaN.setValueAt("Costo tiempo normal", 11, 0);
+        modelFuerzaN.setValueAt("Costo tiempo extra", 12, 0);
+        modelFuerzaN.setValueAt("Costo total", 13, 0);
 
         TablaFuerzaNivelada.setModel(modelFuerzaN);
 
@@ -1732,9 +1874,13 @@ public class PlaneacionP extends javax.swing.JFrame {
 
 
     private void btnsaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsaveActionPerformed
+        TotalFuerzaNivelada = 0;
+        TotalOutsourcing = 0;
+        TotalPersecucion = 0;
+
         ValidarDatos();
         Calcular();
-
+        btnReport.setEnabled(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_btnsaveActionPerformed
 
@@ -1975,13 +2121,6 @@ public class PlaneacionP extends javax.swing.JFrame {
     public void Agregar() {
         String NumeroP, Nombre, DemandaP, Dias;
 
-        if (!Modify) { // Si es nuevo
-            this.Num++;
-            NumeroP = String.valueOf(this.Num);
-        } else { // Si es modificación
-            NumeroP = String.valueOf(this.Numero);
-        }
-
         Nombre = txtNombreP.getText().trim();
         DemandaP = txtDemanda.getText().trim();
         Dias = txtDiasLab.getText().trim();
@@ -2004,21 +2143,27 @@ public class PlaneacionP extends javax.swing.JFrame {
             return;
         }
 
-        if(!Modify){ // Si es nuevo
-        String[] DemandaD = new String[4];
-
-        DemandaD[0] = NumeroP;
-        DemandaD[1] = Nombre;
-        DemandaD[2] = DemandaP;
-        DemandaD[3] = Dias;
-
-        modelDemanda.addRow(DemandaD);
+        if (!Modify) { // Si es nuevo
+            this.Num++;
+            NumeroP = String.valueOf(this.Num);
+        } else { // Si es modificación
+            NumeroP = String.valueOf(this.Numero);
         }
-        else{ // Si es modificación
-          modelDemanda.setValueAt(NumeroP, FilaM, 0); // Num
-          modelDemanda.setValueAt(Nombre, FilaM, 1); // Nombre
-          modelDemanda.setValueAt(DemandaP, FilaM, 2); // DemandaP
-          modelDemanda.setValueAt(Dias, FilaM, 3); // DiasLab   
+
+        if (!Modify) { // Si es nuevo
+            String[] DemandaD = new String[4];
+
+            DemandaD[0] = NumeroP;
+            DemandaD[1] = Nombre;
+            DemandaD[2] = DemandaP;
+            DemandaD[3] = Dias;
+
+            modelDemanda.addRow(DemandaD);
+        } else { // Si es modificación
+            modelDemanda.setValueAt(NumeroP, FilaM, 0); // Num
+            modelDemanda.setValueAt(Nombre, FilaM, 1); // Nombre
+            modelDemanda.setValueAt(DemandaP, FilaM, 2); // DemandaP
+            modelDemanda.setValueAt(Dias, FilaM, 3); // DiasLab   
         }
 
         TablaDemanda.setModel(modelDemanda);
@@ -2083,10 +2228,10 @@ public class PlaneacionP extends javax.swing.JFrame {
             txtDiasLab.setText(DiasLab);
 
             Modify = true;
-                        
+
             FilaM = fila;
             txtNombreP.requestFocus();
-            
+
             btnDelete.setEnabled(false);
             btnModify.setEnabled(false);
 
@@ -2147,6 +2292,266 @@ public class PlaneacionP extends javax.swing.JFrame {
         ActivarBotones();
         // TODO add your handling code here:
     }//GEN-LAST:event_TablaDemandaMousePressed
+
+    PersecucionDataSource DataSourceP;
+
+    public void ReportePersecucion() {
+        DataSourceP = new PersecucionDataSource();
+
+        String HrsUnid, HorasN, HorasE, CtoUnid, IniTrab, Contra, Desp, OutS, InvI, SS, Mant, PerMant;
+
+        HrsUnid = txtHorasUnid.getText().trim();
+        HorasN = txtCtoHrsN.getText().trim();
+        HorasE = txtCtoHrsE.getText().trim();
+        CtoUnid = txtCtoUnid.getText().trim();
+        IniTrab = txtIniTrab.getText().trim();
+        Contra = txtCtoContra.getText().trim();
+        Desp = txtCtoDesp.getText().trim();
+        OutS = txtCtoOutsourcing.getText().trim();
+        InvI = txtInvIni.getText().trim();
+        SS = txtStockSeguridad.getText().trim();
+        Mant = txtCtoMant.getText().trim();
+        PerMant = (String) cmbPeriodoMant.getSelectedItem();
+
+        String Total = lblTotalP.getText();
+
+        DataSourceP.addValorInfo(new InfoPOJO(HrsUnid, HorasN, HorasE, CtoUnid, IniTrab, Contra,
+                Desp, OutS, InvI, SS, Mant + " " + PerMant, Total));
+
+        DataSourceP.addValorDemanda(new DemandaRPOJO("Demanda p", "Días lab"));
+
+        for (DemandaPOJO DemandaLista : DemandaList) {
+
+            DataSourceP.addValorDemanda(new DemandaRPOJO(String.valueOf(DemandaLista.getDemandaP()),
+                    String.valueOf(DemandaLista.getDiasLaborables())));
+        }
+
+        DataSourceP.addValor(new PersecucionPOJO("", "Prod requerida", "Hrs prod requeridas",
+                "Hrs disponibles", "# trab requeridos", "# trab contratados",
+                "# trab despedidos", "Cto contratación", "Cto despido", "Cto tiempo normal",
+                "Cto total"));
+
+        //Llenar DataSource
+        for (int i = 1; i < TablaPersecusion.getColumnCount(); i++) {
+
+            String Semana = this.DemandaList.get(i - 1).getNombre();
+            String Produccion_requerida = ((String) this.TablaPersecusion.getModel().getValueAt(0, i));
+            String Horas_producción_requeridas = ((String) this.TablaPersecusion.getModel().getValueAt(1, i));
+            String Horas_disponibles = ((String) this.TablaPersecusion.getModel().getValueAt(2, i));
+            String Cantidad_trabajadores_requeridos = ((String) this.TablaPersecusion.getModel().getValueAt(3, i));
+            String Cantidad_trabajadores_contratados = ((String) this.TablaPersecusion.getModel().getValueAt(4, i));
+            String Cantidad_trabajadores_despedidos = ((String) this.TablaPersecusion.getModel().getValueAt(5, i));
+            String Costo_contratación = ((String) this.TablaPersecusion.getModel().getValueAt(6, i));
+            String Costo_despido = ((String) this.TablaPersecusion.getModel().getValueAt(7, i));
+            String Costo_tiempo_normal = ((String) this.TablaPersecusion.getModel().getValueAt(8, i));
+            String Costo_total = ((String) this.TablaPersecusion.getModel().getValueAt(9, i));
+
+            DataSourceP.addValor(new PersecucionPOJO(Semana, Produccion_requerida, Horas_producción_requeridas,
+                    Horas_disponibles, Cantidad_trabajadores_requeridos, Cantidad_trabajadores_contratados,
+                    Cantidad_trabajadores_despedidos, Costo_contratación, Costo_despido, Costo_tiempo_normal,
+                    Costo_total));
+
+        }
+
+        File miDir = new File("");
+        String reporte = miDir.getAbsolutePath() + "/src/Reports/Persecucion_Report.jasper";
+
+        JasperPrint jp = null;
+
+        try {
+            jp = JasperFillManager.fillReport(reporte, null, DataSourceP);
+        } catch (JRException ex) {
+//                Logger.getLogger(VacacionesP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        JasperViewer view = new JasperViewer(jp, false);
+
+        view.setTitle("Estrategia de Persecución");
+
+        view.setZoomRatio((float) 0.75);
+        view.setVisible(true);
+
+        view.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        view.toFront();
+    }
+
+    FuerzaNDataSource DataSourceF;
+
+    public void ReporteFuerzaN() {
+        DataSourceF = new FuerzaNDataSource();
+
+        String HrsUnid, HorasN, HorasE, CtoUnid, IniTrab, Contra, Desp, OutS, InvI, SS, Mant, PerMant;
+
+        HrsUnid = txtHorasUnid.getText().trim();
+        HorasN = txtCtoHrsN.getText().trim();
+        HorasE = txtCtoHrsE.getText().trim();
+        CtoUnid = txtCtoUnid.getText().trim();
+        IniTrab = txtIniTrab.getText().trim();
+        Contra = txtCtoContra.getText().trim();
+        Desp = txtCtoDesp.getText().trim();
+        OutS = txtCtoOutsourcing.getText().trim();
+        InvI = txtInvIni.getText().trim();
+        SS = txtStockSeguridad.getText().trim();
+        Mant = txtCtoMant.getText().trim();
+        PerMant = (String) cmbPeriodoMant.getSelectedItem();
+
+        String Total = lblTotalF.getText();
+
+        DataSourceF.addValorInfo(new InfoPOJO(HrsUnid, HorasN, HorasE, CtoUnid, IniTrab, Contra,
+                Desp, OutS, InvI, SS, Mant + " " + PerMant, Total));
+
+        DataSourceF.addValorDemanda(new DemandaRPOJO("Demanda p", "Días lab"));
+
+        for (DemandaPOJO DemandaLista : DemandaList) {
+
+            DataSourceF.addValorDemanda(new DemandaRPOJO(String.valueOf(DemandaLista.getDemandaP()),
+                    String.valueOf(DemandaLista.getDiasLaborables())));
+        }
+
+        DataSourceF.addValor(new FuerzaNPOJO("", "Prod requerida", "Hrs prod requeridas",
+                "Hrs disponibles", "Hrs disponibles N", "Unids prod",
+                "Unids falt", "Unids sobr", "Hrs Extras", "Hrs Ociosas", "Cto falt", "Cto mant",
+                "Cto hrs normal", "Cto hrs ext", "Cto total"));
+
+        //Llenar DataSource
+        for (int i = 1; i < TablaFuerzaNivelada.getColumnCount(); i++) {
+
+            String Semana = this.DemandaList.get(i - 1).getNombre();
+            String Prod_req = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(0, i));
+            String Hrs_req = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(1, i));
+            String Hrs_disp = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(2, i));
+            String Hrs_disp_N = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(3, i));
+            String Unids_prod = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(4, i));
+            String Unids_falt = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(5, i));
+            String Unids_sobr = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(6, i));
+            String Hrs_E = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(7, i));
+            String Hrs_O = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(8, i));
+            String Cost_OS = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(9, i));
+            String Cost_mant = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(10, i));
+            String Cost_normal = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(11, i));
+            String Cost_extra = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(12, i));
+            String Cost_total = ((String) this.TablaFuerzaNivelada.getModel().getValueAt(13, i));
+
+            DataSourceF.addValor(new FuerzaNPOJO(Semana, Prod_req, Hrs_req, Hrs_disp,
+                    Hrs_disp_N, Unids_prod, Unids_falt, Unids_sobr, Hrs_E, Hrs_O, Cost_OS,
+                    Cost_mant, Cost_normal, Cost_extra, Cost_total));
+
+        }
+
+        File miDir = new File("");
+        String reporte = miDir.getAbsolutePath() + "/src/Reports/FuerzaN_Report.jasper";
+
+        JasperPrint jp = null;
+
+        try {
+            jp = JasperFillManager.fillReport(reporte, null, DataSourceF);
+        } catch (JRException ex) {
+//                Logger.getLogger(VacacionesP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        JasperViewer view = new JasperViewer(jp, false);
+
+        view.setTitle("Estrategia de Fuerza Nivelada y Horas Extras");
+
+        view.setZoomRatio((float) 0.75);
+        view.setVisible(true);
+
+        view.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        view.toFront();
+    }
+
+    OutsourcingDataSource DataSourceO;
+
+    public void ReporteOutsourcing() {
+        DataSourceO = new OutsourcingDataSource();
+
+        String HrsUnid, HorasN, HorasE, CtoUnid, IniTrab, Contra, Desp, OutS, InvI, SS, Mant, PerMant;
+
+        HrsUnid = txtHorasUnid.getText().trim();
+        HorasN = txtCtoHrsN.getText().trim();
+        HorasE = txtCtoHrsE.getText().trim();
+        CtoUnid = txtCtoUnid.getText().trim();
+        IniTrab = txtIniTrab.getText().trim();
+        Contra = txtCtoContra.getText().trim();
+        Desp = txtCtoDesp.getText().trim();
+        OutS = txtCtoOutsourcing.getText().trim();
+        InvI = txtInvIni.getText().trim();
+        SS = txtStockSeguridad.getText().trim();
+        Mant = txtCtoMant.getText().trim();
+        PerMant = (String) cmbPeriodoMant.getSelectedItem();
+
+        String Total = lblTotalO.getText();
+
+        DataSourceO.addValorInfo(new InfoPOJO(HrsUnid, HorasN, HorasE, CtoUnid, IniTrab, Contra,
+                Desp, OutS, InvI, SS, Mant + " " + PerMant, Total));
+
+        DataSourceO.addValorDemanda(new DemandaRPOJO("Demanda p", "Días lab"));
+
+        for (DemandaPOJO DemandaLista : DemandaList) {
+
+            DataSourceO.addValorDemanda(new DemandaRPOJO(String.valueOf(DemandaLista.getDemandaP()),
+                    String.valueOf(DemandaLista.getDiasLaborables())));
+        }
+
+        DataSourceO.addValor(new OutsourcingPOJO("", "Prod requerida", "Hrs prod requeridas",
+                "Hrs disponibles", "Hrs disponibles N", "Unids prod",
+                "Unids falt", "Unids sobr", "Cto hrs normal", "Cto falt", "Cto mant",
+                "Cto total"));
+
+        //Llenar DataSource
+        for (int i = 1; i < TablaOutsourcing.getColumnCount(); i++) {
+
+            String Semana = this.DemandaList.get(i - 1).getNombre();
+            String Prod_req = ((String) this.TablaOutsourcing.getModel().getValueAt(0, i));
+            String Hrs_req = ((String) this.TablaOutsourcing.getModel().getValueAt(1, i));
+            String Hrs_disp = ((String) this.TablaOutsourcing.getModel().getValueAt(2, i));
+            String Hrs_disp_N = ((String) this.TablaOutsourcing.getModel().getValueAt(3, i));
+            String Unids_prod = ((String) this.TablaOutsourcing.getModel().getValueAt(4, i));
+            String Unids_falt = ((String) this.TablaOutsourcing.getModel().getValueAt(5, i));
+            String Unids_sobr = ((String) this.TablaOutsourcing.getModel().getValueAt(6, i));
+            String Cost_normal = ((String) this.TablaOutsourcing.getModel().getValueAt(7, i));
+            String Cost_OS = ((String) this.TablaOutsourcing.getModel().getValueAt(8, i));
+            String Cost_mant = ((String) this.TablaOutsourcing.getModel().getValueAt(9, i));
+            String Cost_total = ((String) this.TablaOutsourcing.getModel().getValueAt(10, i));
+
+            DataSourceO.addValor(new OutsourcingPOJO(Semana, Prod_req, Hrs_req, Hrs_disp,
+                    Hrs_disp_N, Unids_prod, Unids_falt, Unids_sobr, Cost_normal, Cost_OS,
+                    Cost_mant, Cost_total));
+
+        }
+
+        File miDir = new File("");
+        String reporte = miDir.getAbsolutePath() + "/src/Reports/Outsourcing_Report.jasper";
+
+        JasperPrint jp = null;
+
+        try {
+            jp = JasperFillManager.fillReport(reporte, null, DataSourceO);
+        } catch (JRException ex) {
+//                Logger.getLogger(VacacionesP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        JasperViewer view = new JasperViewer(jp, false);
+
+        view.setTitle("Estrategia de Outsourcing");
+
+        view.setZoomRatio((float) 0.75);
+        view.setVisible(true);
+
+        view.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        view.toFront();
+    }
+
+    public void GenerarReporte() {
+
+        ReportePersecucion();
+        ReporteFuerzaN();
+        ReporteOutsourcing();
+    }
+
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+        GenerarReporte();        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReportActionPerformed
 
     public class FormatoTabla extends DefaultTableCellRenderer {
 
@@ -2401,6 +2806,7 @@ public class PlaneacionP extends javax.swing.JFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnModify;
+    private javax.swing.JButton btnReport;
     private javax.swing.JButton btnnew;
     private javax.swing.JButton btnsave;
     private javax.swing.JComboBox<String> cmbPeriodoMant;
